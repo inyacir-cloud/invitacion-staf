@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -35,6 +35,11 @@
 
         <div id="staffVideoContainer" class="staff-video-container" hidden>
           <div id="staffQrRegion" class="staff-qr-region"></div>
+          <div class="staff-camera-actions">
+            <button class="staff-button staff-button-secondary" id="botonCambiarCamara" type="button" hidden>
+              Girar camara
+            </button>
+          </div>
           <button class="staff-button staff-button-secondary" id="botonDetenerEscaner" type="button">
             Detener escaneo
           </button>
@@ -54,7 +59,7 @@
 
     <section class="staff-panel" id="staffPanel" hidden>
       <p class="staff-kicker">Control de accesos</p>
-      <h1 class="staff-title">Validación de grupo</h1>
+      <h1 class="staff-title">Validacion de grupo</h1>
       <p class="staff-copy">Escanea o abre el QR del grupo. El registro se descuenta en vivo desde la hoja.</p>
 
       <div class="staff-status" id="staffStatus" aria-live="polite">Cargando acceso...</div>
@@ -83,14 +88,14 @@
 
         <div class="staff-meta">
           <p><span>Estado</span><strong id="staffEstadoAcceso">-</strong></p>
-          <p><span>Último acceso</span><strong id="staffUltimoAcceso">-</strong></p>
-          <p><span>Último validó</span><strong id="staffUltimoValidadoPor">-</strong></p>
+          <p><span>Ultimo acceso</span><strong id="staffUltimoAcceso">-</strong></p>
+          <p><span>Ultimo valido</span><strong id="staffUltimoValidadoPor">-</strong></p>
         </div>
       </section>
 
       <section class="staff-card" id="staffControl" hidden>
         <div class="staff-stepper-block">
-          <p class="staff-label">¿Cuántos ingresan ahora?</p>
+          <p class="staff-label">Cuantos ingresan ahora?</p>
           <div class="staff-stepper" role="group" aria-label="Cantidad de invitados que ingresan">
             <button class="staff-stepper-button" id="botonRestar" type="button" aria-label="Restar un invitado">-</button>
             <div class="staff-stepper-value" id="cantidadIngresoActual">1</div>

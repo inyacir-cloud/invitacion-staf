@@ -1,4 +1,4 @@
-const staffApiEndpoint = document.body?.dataset.apiEndpoint?.trim() || "";
+﻿const staffApiEndpoint = document.body?.dataset.apiEndpoint?.trim() || "";
 const staffParams = new URLSearchParams(window.location.search);
 let tokenGrupo = (staffParams.get("token") || "").trim();
 
@@ -11,6 +11,7 @@ const staffStatusPortada = document.getElementById("staffStatusPortada");
 const staffVideoContainer = document.getElementById("staffVideoContainer");
 const staffQrRegion = document.getElementById("staffQrRegion");
 const botonDetenerEscaner = document.getElementById("botonDetenerEscaner");
+const botonCambiarCamara = document.getElementById("botonCambiarCamara");
 
 const staffStatus = document.getElementById("staffStatus");
 const staffResumen = document.getElementById("staffResumen");
@@ -35,6 +36,9 @@ let datosAccesoActual = null;
 let cantidadSeleccionada = 1;
 let registrandoAcceso = false;
 let scanner = null;
+let camarasDisponibles = [];
+let indiceCamaraActual = -1;
+let modoCamaraActual = "environment";
 
 function normalizarFechaStaff(valor) {
   const texto = String(valor || "").trim();
@@ -69,78 +73,52 @@ function mostrarEstadoPortada(texto, esError = false) {
   staffStatusPortada.classList.toggle("is-error", esError);
 }
 
-function iniciarEscanerQR() {
-  if (!staffQrRegion) {
-    mostrarEstadoPortada("No se encontró el contenedor de QR.", true);
-    return;
-  }
-
-  if (typeof Html5Qrcode === "undefined" || typeof Html5Qrcode.getCameras !== "function") {
-    mostrarEstadoPortada("El escáner QR no se cargó correctamente.", true);
-    return;
-  }
-
-  if (scanner) {
-    detenerEscanerQR();
-  }
-
-  if (staffVideoContainer) staffVideoContainer.hidden = false;
-  mostrarEstadoPortada("Buscando cámara...", false);
-
-  Html5Qrcode.getCameras().then(function (cameras) {
-    if (!cameras || cameras.length === 0) {
-      mostrarEstadoPortada("No se encontraron cámaras.", true);
-      return;
-    }
-
-    const cameraId = cameras[0].id;
-    scanner = new Html5Qrcode("staffQrRegion");
-
-    scanner.start(
-      cameraId,
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 }
-      },
-      function (decodedText) {
-        detenerEscanerQR();
-        procesarToken(decodedText);
-      },
-      function () {
-        // error de lectura periódica, se ignora
-      }
-    ).then(function () {
-      mostrarEstadoPortada("Escaneando QR... Apunta la cámara al código.");
-    }).catch(function (error) {
-      mostrarEstadoPortada("Error al iniciar la cámara: " + error, true);
-      if (staffVideoContainer) staffVideoContainer.hidden = true;
+function obtenerIndiceCamaraInicial(cameras) {
+  const prioridades = ["back", "rear", "environment", "trasera", "posterior"];
+  const indiceTrasera = cameras.findIndex(function (camera) {
+    const etiqueta = String(camera.label || "").toLowerCase();
+    return prioridades.some(function (texto) {
+      return etiqueta.includes(texto);
     });
-  }).catch(function (e) {
-    mostrarEstadoPortada("Error al acceder a la cámara: " + (e?.message || e), true);
-    if (staffVideoContainer) staffVideoContainer.hidden = true;
   });
+
+  if (indiceTrasera >= 0) return indiceTrasera;
+  if (cameras.length > 1) return cameras.length - 1;
+  return 0;
+}
+
+function actualizarBotonCambiarCamara() {
+  if (!botonCambiarCamara) return;
+  botonCambiarCamara.hidden = camarasDisponibles.length < 2;
 }
 
 function detenerEscanerQR() {
-  if (scanner) {
-    scanner.stop().catch(function () {
-      // ignorar errores al detener
-    });
-    scanner = null;
+  const scannerActivo = scanner;
+  scanner = null;
+
+  const limpiarVista = function () {
+    if (staffVideoContainer) staffVideoContainer.hidden = true;
+    if (staffQrRegion) {
+      staffQrRegion.innerHTML = "";
+    }
+  };
+
+  if (!scannerActivo) {
+    limpiarVista();
+    return Promise.resolve();
   }
-  if (staffVideoContainer) staffVideoContainer.hidden = true;
-  if (staffQrRegion) {
-    staffQrRegion.innerHTML = "";
-  }
+
+  return scannerActivo.stop().catch(function () {
+    // ignorar errores al detener
+  }).finally(limpiarVista);
 }
 
 function procesarToken(token) {
   if (!token) {
-    mostrarEstadoPortada("Ingresa un token válido.", true);
+    mostrarEstadoPortada("Ingresa un token valido.", true);
     return;
   }
 
-  // Si el token es una URL, extraer el parámetro 'token'
   let tokenReal = token;
   try {
     const url = new URL(token);
@@ -149,7 +127,7 @@ function procesarToken(token) {
       tokenReal = tokenParam;
     }
   } catch {
-    // No es una URL, usar como está
+    // No es una URL, usar como esta
   }
 
   tokenGrupo = tokenReal;
@@ -160,6 +138,143 @@ function procesarToken(token) {
     if (staffPanel) staffPanel.hidden = false;
   }).catch(() => {
     // Error ya mostrado en cargarAccesoGrupo
+  });
+}
+
+function iniciarScannerConCamara(cameraConfig) {
+  scanner = new Html5Qrcode("staffQrRegion");
+
+  return scanner.start(
+    cameraConfig,
+    {
+      fps: 10,
+      qrbox: { width: 250, height: 250 }
+    },
+    function (decodedText) {
+      detenerEscanerQR();
+      procesarToken(decodedText);
+    },
+    function () {
+      // error de lectura periodica, se ignora
+    }
+  ).then(function () {
+    if (typeof cameraConfig === "string") {
+      const indiceEncontrado = camarasDisponibles.findIndex(function (camera) {
+        return camera.id === cameraConfig;
+      });
+
+      if (indiceEncontrado >= 0) {
+        indiceCamaraActual = indiceEncontrado;
+        const etiqueta = String(camarasDisponibles[indiceCamaraActual].label || "").toLowerCase();
+        modoCamaraActual = etiqueta.includes("front") || etiqueta.includes("user") || etiqueta.includes("frontal")
+          ? "user"
+          : "environment";
+      }
+    } else {
+      modoCamaraActual = cameraConfig?.facingMode === "user" ? "user" : "environment";
+      indiceCamaraActual = camarasDisponibles.findIndex(function (camera) {
+        const etiqueta = String(camera.label || "").toLowerCase();
+        if (modoCamaraActual === "user") {
+          return etiqueta.includes("front") || etiqueta.includes("user") || etiqueta.includes("frontal");
+        }
+
+        return etiqueta.includes("back") || etiqueta.includes("rear") || etiqueta.includes("environment") || etiqueta.includes("trasera") || etiqueta.includes("posterior");
+      });
+    }
+
+    mostrarEstadoPortada("Escaneando QR... Apunta la camara al codigo.");
+  }).catch(function (error) {
+    mostrarEstadoPortada("Error al iniciar la camara: " + error, true);
+    if (staffVideoContainer) staffVideoContainer.hidden = true;
+    if (staffQrRegion) {
+      staffQrRegion.innerHTML = "";
+    }
+    scanner = null;
+    throw error;
+  });
+}
+
+function obtenerConfigCamaraInicial() {
+  if (!camarasDisponibles.length) {
+    return { facingMode: "environment" };
+  }
+
+  indiceCamaraActual = obtenerIndiceCamaraInicial(camarasDisponibles);
+  const camaraInicial = camarasDisponibles[indiceCamaraActual];
+
+  if (camaraInicial?.id) {
+    return camaraInicial.id;
+  }
+
+  return { facingMode: "environment" };
+}
+
+function iniciarCamaraConFallback() {
+  const configInicial = obtenerConfigCamaraInicial();
+
+  return iniciarScannerConCamara(configInicial).catch(function () {
+    if (modoCamaraActual === "user") {
+      throw new Error("No fue posible iniciar ninguna camara.");
+    }
+
+    mostrarEstadoPortada("No se encontro camara trasera. Usando camara frontal...");
+    indiceCamaraActual = camarasDisponibles.findIndex(function (camera) {
+      const etiqueta = String(camera.label || "").toLowerCase();
+      return etiqueta.includes("front") || etiqueta.includes("user") || etiqueta.includes("frontal");
+    });
+
+    const camaraFrontal = indiceCamaraActual >= 0 && camarasDisponibles[indiceCamaraActual]?.id
+      ? camarasDisponibles[indiceCamaraActual].id
+      : { facingMode: "user" };
+
+    return iniciarScannerConCamara(camaraFrontal);
+  });
+}
+
+function iniciarEscanerQR() {
+  if (!staffQrRegion) {
+    mostrarEstadoPortada("No se encontro el contenedor de QR.", true);
+    return;
+  }
+
+  if (typeof Html5Qrcode === "undefined" || typeof Html5Qrcode.getCameras !== "function") {
+    mostrarEstadoPortada("El escaner QR no se cargo correctamente.", true);
+    return;
+  }
+
+  if (scanner) {
+    detenerEscanerQR();
+  }
+
+  if (staffVideoContainer) staffVideoContainer.hidden = false;
+  mostrarEstadoPortada("Buscando camara...", false);
+
+  Html5Qrcode.getCameras().then(function (cameras) {
+    if (!cameras || cameras.length === 0) {
+      mostrarEstadoPortada("No se encontraron camaras.", true);
+      return;
+    }
+
+    camarasDisponibles = cameras;
+    actualizarBotonCambiarCamara();
+
+    return iniciarCamaraConFallback();
+  }).catch(function (e) {
+    mostrarEstadoPortada("Error al acceder a la camara: " + (e?.message || e), true);
+    if (staffVideoContainer) staffVideoContainer.hidden = true;
+  });
+}
+
+function cambiarCamara() {
+  if (!camarasDisponibles.length || camarasDisponibles.length < 2) return;
+
+  const siguienteIndice = (indiceCamaraActual + 1) % camarasDisponibles.length;
+  mostrarEstadoPortada("Cambiando camara...");
+  indiceCamaraActual = siguienteIndice;
+
+  detenerEscanerQR().finally(function () {
+    if (staffVideoContainer) staffVideoContainer.hidden = false;
+    iniciarScannerConCamara(camarasDisponibles[indiceCamaraActual].id);
   });
 }
 
@@ -258,12 +373,12 @@ function cargarAccesoGrupo() {
       }
 
       renderizarAcceso(payload.invitado);
-      mostrarEstadoStaff("Acceso listo para validación.");
+      mostrarEstadoStaff("Acceso listo para validacion.");
     })
     .catch((error) => {
       if (staffResumen) staffResumen.hidden = true;
       if (staffControl) staffControl.hidden = true;
-      mostrarEstadoStaff(error.message || "Ocurrió un error al cargar el acceso.", true);
+      mostrarEstadoStaff(error.message || "Ocurrio un error al cargar el acceso.", true);
     });
 }
 
@@ -311,7 +426,7 @@ function registrarAcceso() {
       return cargarAccesoGrupo();
     })
     .catch((error) => {
-      mostrarEstadoStaff(error.message || "Ocurrió un error al registrar el acceso.", true);
+      mostrarEstadoStaff(error.message || "Ocurrio un error al registrar el acceso.", true);
     })
     .finally(() => {
       registrandoAcceso = false;
@@ -344,6 +459,10 @@ if (botonEscanearQR) {
 
 if (botonDetenerEscaner) {
   botonDetenerEscaner.addEventListener("click", detenerEscanerQR);
+}
+
+if (botonCambiarCamara) {
+  botonCambiarCamara.addEventListener("click", cambiarCamara);
 }
 
 if (botonIniciarRegistro) {
