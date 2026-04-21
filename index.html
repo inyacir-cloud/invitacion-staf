@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitación</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body
+  data-api-endpoint="https://script.google.com/macros/s/AKfycbzbbN3K7N94ZwBTYU6-zdWdUeQv74cJkWy-v6f_lP5M4VqcdDnNXpOLZjH2uhlLrkZ6/exec"
+>
+  <!-- PORTADA: texto editable -->
+  <section id="portada">
+    <div class="contenido">
+      <h1 class="nombres">
+        Edith <br> & <br> Pablo
+      </h1>
+
+      <p class="mensaje">
+        Tenemos una noticia...
+      </p>
+
+      <div class="swipe-wrap">
+        <p class="swipe-texto">Desliza para abrir</p>
+        <div class="swipe-track" id="swipeTrack">
+          <button class="swipe-thumb" id="swipeThumb" type="button" aria-label="Desliza para abrir la invitación">➜</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVITACION: contenido editable por bloques -->
+  <section id="invitacion" hidden>
+    <!-- ENCABEZADO DEL EVENTO -->
+    <section class="bloque hero">
+      <div class="hero-portada">
+        <img
+          class="hero-portada-imagen"
+          src="invitacion1.png"
+          alt="Portada floral de la invitación"
+        >
+        <div class="hero-portada-fade"></div>
+        <div class="hero-portada-contenido">
+        <h2 class="titulo-principal hero-titulo">Nos casamos</h2>
+          <p class="detalle-fecha hero-fecha" id="fechaEvento" data-fecha-evento="2026-08-22T16:00:00">22 Agosto del 2026</p>
+          <div class="hero-separador" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="frase">
+        Con la bendición de Dios y 
+      </p>
+
+      <div class="bendicion-grid" aria-label="Dedicatoria especial">
+        <article class="bendicion-card">
+          <p class="bendicion-kicker">Madres</p>
+          <p class="bendicion-nombre">Nombre de la madre</p>
+          <p class="bendicion-nombre">Nombre de la madre</p>
+        </article>
+
+        <article class="bendicion-card">
+          <p class="bendicion-kicker">Padrinos</p>
+          <p class="bendicion-nombre">Nombre del padrino</p>
+          <p class="bendicion-nombre">Nombre de la madrina</p>
+        </article>
+      </div>
+
+      <p class="frase frase-cierre">
+        Hemos decidido unir nuestras vidas en matrimonio.
+        Nos encantaría que nos acompañaras para compartir contigo este día tan especial.
+      </p>
+    </section>
+
+    <!-- CUENTA REGRESIVA -->
+    <section class="bloque-libre bloque-countdown">
+      <p class="countdown-icono" aria-hidden="true">— ♡ —</p>
+      <p class="detalle-secundario">Cada día nos acerca más.</p>
+      <h3 class="countdown-titulo">Faltan</h3>
+      <div id="countdown" class="countdown-grid" aria-live="polite">
+        <div class="countdown-loading">Cargando cuenta regresiva...</div>
+      </div>
+      <p class="countdown-footer">Para nuestro gran día</p>
+      <p class="countdown-adorno" aria-hidden="true">﹏ ♡ ﹏</p>
+    </section>
+
+    <!-- INVITADO -->
+    <section class="bloque invitados">
+      <p class="etiqueta">Invitación para</p>
+      <h3 id="nombreInvitado">Nombre del invitado</h3>
+      <p id="textoBoletos">Hemos reservado 2 lugares en su honor</p>
+    </section>
+
+    <!-- DETALLES DEL EVENTO -->
+    <section class="bloque evento">
+      <img
+        class="evento-imagen"
+        src="ceremonia.png"
+        alt="Iglesia de la ceremonia"
+      >
+      <h3>Ceremonia</h3>
+      <p>Parroquia de Nuestra Señora de Lourdes</p>
+      <p>5:00 PM</p>
+      <p>Tlaxcanes 45, Ricardo Flores Magón, Iztapalapa, 09820 Ciudad de México, CDMX</p>
+      <a href="https://maps.app.goo.gl/sWeYDei2mtqEPMzD6" target="_blank" rel="noopener noreferrer">Ver ubicación</a>
+    </section>
+
+    <section class="bloque evento">
+      <img
+        class="evento-imagen"
+        src="recepcion.png"
+        alt="Lugar de la recepción"
+      >
+      <h3>Recepción</h3>
+      <p>Salón de fiestas Caribe</p>
+      <p>7:00 PM</p>
+      <p>C. San Pablo 3, El Santuario, Iztapalapa, 09836 Ciudad de México, CDMX</p>
+      <a href="https://maps.app.goo.gl/GaxFKqzexFPhDg886" target="_blank" rel="noopener noreferrer">Ver ubicación</a>
+    </section>
+
+    <!-- INFORMACION ADICIONAL -->
+    <section class="bloque">
+      <h3>Código de vestimenta</h3>
+      <p>Formal elegante</p>
+    </section>
+
+    <section class="bloque">
+      <h3>Mesa de Regalos</h3>
+      <p>Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle con nosotros, aquí podrás encontrar una opción especial.</p>
+      <a href="#">Ver mesa de regalos</a>
+    </section>
+
+    <!-- CONFIRMACION -->
+    <section class="bloque bloque-confirmacion">
+      <details class="confirmacion-desplegable">
+        <summary class="confirmacion-resumen">
+          <h3>Confirmación de asistencia</h3>
+          <p class="confirmacion-intro" id="textoFechaLimite" data-fecha-limite="2026-08-01T23:59:59">Confírmanos antes del 1 de agosto de 2026</p>
+          <span class="confirmacion-toggle-texto">Toca para abrir</span>
+        </summary>
+
+        <div class="confirmacion-box">
+          <div class="confirmacion-adorno" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <label for="confirmacion">¿Asistirás?</label>
+          <select id="confirmacion">
+            <option value="">Selecciona una opción</option>
+            <option value="SI">Sí asistiré</option>
+            <option value="NO">No podré asistir</option>
+          </select>
+
+          <label for="boletosConfirmados">¿Cuántos boletos usarás?</label>
+          <p class="confirmacion-ayuda" id="textoBoletosDisponibles"></p>
+          <select id="boletosConfirmados">
+            <option value="">Selecciona cuántos boletos usarás</option>
+          </select>
+
+          <label for="observaciones">Mensaje</label>
+          <textarea id="observaciones" rows="3" placeholder="Déjales un mensaje a los novios"></textarea>
+
+          <button class="boton-secundario" id="botonConfirmacion" type="button">
+            Enviar confirmación
+          </button>
+
+          <p id="mensajeConfirmacion" aria-live="polite"></p>
+        </div>
+      </details>
+    </section>
+
+  </section>
+
+  <div class="pase-modal" id="paseModal" hidden>
+    <div class="pase-overlay" id="paseOverlay"></div>
+    <div class="pase-modal-card" role="dialog" aria-modal="true" aria-labelledby="paseNombreInvitado">
+      <button class="pase-cerrar" id="botonCerrarPase" type="button" aria-label="Cerrar pase digital">×</button>
+      <p class="etiqueta">Acceso para</p>
+      <p class="pase-nombre" id="paseNombreInvitado">Invitado especial</p>
+      <p class="pase-codigo" id="paseCodigoInvitado">-</p>
+      <div class="pase-qr" id="paseQr"></div>
+      <div class="pase-modal-resumen">
+        <p><span>Confirmados</span><strong id="paseModalConfirmados">0</strong></p>
+        <p><span>Pendientes</span><strong id="paseModalPendientes">0</strong></p>
+      </div>
+      <p class="pase-ayuda">Presenta este QR en la entrada. El staff validará en tiempo real tus accesos disponibles.</p>
+    </div>
+  </div>
+
+  <audio id="musicaBoda" loop preload="none">
+    <source src="cancion.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="boton-musica-flotante" id="botonMusica" type="button" aria-label="Reproducir música">
+    <span class="boton-musica-icono" aria-hidden="true">♪</span>
+    <span class="boton-musica-texto">Música</span>
+  </button>
+
+  <button class="boton-pase-flotante" id="botonVerQr" type="button" hidden aria-label="Abrir pase digital">
+    <span class="boton-pase-icono" aria-hidden="true">tickets</span>
+  </button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

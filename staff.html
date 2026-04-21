@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Accesos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="staff.css">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body class="staff-body"
+  data-api-endpoint="https://script.google.com/macros/s/AKfycbzbbN3K7N94ZwBTYU6-zdWdUeQv74cJkWy-v6f_lP5M4VqcdDnNXpOLZjH2uhlLrkZ6/exec"
+>
+  <main class="staff-shell">
+    <header class="staff-header">
+      <div class="staff-brand">
+        <div class="staff-brand-logo">CX</div>
+        <div class="staff-brand-copy">
+          <p class="staff-brand-name">INYACIRX TECH</p>
+          <p class="staff-brand-role">Control de accesos</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="staff-portada" id="staffPortada">
+      <h1 class="staff-portada-title">Panel de acceso</h1>
+      <p class="staff-portada-copy">Escanea el QR del pase o ingresa el token para validar el ingreso en vivo.</p>
+
+      <div class="staff-portada-actions">
+        <button class="staff-button staff-button-primary" id="botonEscanearQR" type="button">
+          Escanear QR
+        </button>
+
+        <div id="staffVideoContainer" class="staff-video-container" hidden>
+          <div id="staffQrRegion" class="staff-qr-region"></div>
+          <button class="staff-button staff-button-secondary" id="botonDetenerEscaner" type="button">
+            Detener escaneo
+          </button>
+        </div>
+
+        <div class="staff-token-input">
+          <label for="staffTokenManual">O ingresa el token:</label>
+          <input class="staff-input" id="staffTokenManual" type="text" placeholder="Ej. ABC123..." maxlength="50">
+          <button class="staff-button staff-button-secondary" id="botonIniciarRegistro" type="button">
+            Iniciar registro
+          </button>
+        </div>
+      </div>
+
+      <div class="staff-status" id="staffStatusPortada" aria-live="polite"></div>
+    </section>
+
+    <section class="staff-panel" id="staffPanel" hidden>
+      <p class="staff-kicker">Control de accesos</p>
+      <h1 class="staff-title">Validación de grupo</h1>
+      <p class="staff-copy">Escanea o abre el QR del grupo. El registro se descuenta en vivo desde la hoja.</p>
+
+      <div class="staff-status" id="staffStatus" aria-live="polite">Cargando acceso...</div>
+
+      <section class="staff-card" id="staffResumen" hidden>
+        <div class="staff-summary-head">
+          <p class="staff-label">Invitado</p>
+          <h2 class="staff-name" id="staffNombreInvitado">-</h2>
+          <p class="staff-code" id="staffCodigoInvitado">-</p>
+        </div>
+
+        <div class="staff-stats">
+          <article class="staff-stat">
+            <span class="staff-stat-label">Confirmados</span>
+            <strong class="staff-stat-value" id="staffConfirmados">0</strong>
+          </article>
+          <article class="staff-stat">
+            <span class="staff-stat-label">Ya ingresaron</span>
+            <strong class="staff-stat-value" id="staffUsados">0</strong>
+          </article>
+          <article class="staff-stat staff-stat-highlight">
+            <span class="staff-stat-label">Restantes</span>
+            <strong class="staff-stat-value" id="staffRestantes">0</strong>
+          </article>
+        </div>
+
+        <div class="staff-meta">
+          <p><span>Estado</span><strong id="staffEstadoAcceso">-</strong></p>
+          <p><span>Último acceso</span><strong id="staffUltimoAcceso">-</strong></p>
+          <p><span>Último validó</span><strong id="staffUltimoValidadoPor">-</strong></p>
+        </div>
+      </section>
+
+      <section class="staff-card" id="staffControl" hidden>
+        <div class="staff-stepper-block">
+          <p class="staff-label">¿Cuántos ingresan ahora?</p>
+          <div class="staff-stepper" role="group" aria-label="Cantidad de invitados que ingresan">
+            <button class="staff-stepper-button" id="botonRestar" type="button" aria-label="Restar un invitado">-</button>
+            <div class="staff-stepper-value" id="cantidadIngresoActual">1</div>
+            <button class="staff-stepper-button" id="botonSumar" type="button" aria-label="Sumar un invitado">+</button>
+          </div>
+          <p class="staff-hint" id="staffHintCantidad">Puedes registrar hasta 0 acceso(s).</p>
+        </div>
+
+        <label class="staff-label" for="staffValidadoPor">Validado por</label>
+        <input class="staff-input" id="staffValidadoPor" type="text" value="STAFF" maxlength="40" placeholder="Ej. STAFF">
+
+        <label class="staff-label" for="staffObservaciones">Observaciones</label>
+        <textarea class="staff-input staff-textarea" id="staffObservaciones" rows="3" placeholder="Nota opcional del ingreso"></textarea>
+
+        <button class="staff-submit" id="botonRegistrarAcceso" type="button">Registrar entrada</button>
+      </section>
+    </section>
+  </main>
+
+  <script src="staff.js"></script>
+</body>
+</html>
