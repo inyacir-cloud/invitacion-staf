@@ -1,4 +1,5 @@
 .staff-body {
+  margin: 0;
   min-height: 100vh;
   font-family: "Manrope", sans-serif;
   background: linear-gradient(180deg, #07101e 0%, #101f35 100%);
@@ -16,6 +17,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 24px 16px 40px;
+  box-sizing: border-box;
 }
 
 .staff-shell.is-operational {
@@ -244,6 +246,7 @@
   font-size: 32px;
   line-height: 1.1;
   color: #ffffff;
+  word-break: break-word;
 }
 
 .staff-code {
@@ -253,6 +256,7 @@
   text-transform: uppercase;
   color: #a8c7ff;
   font-weight: 700;
+  word-break: break-word;
 }
 
 .staff-stats {
@@ -427,6 +431,7 @@
 .staff-button {
   display: block;
   width: 100%;
+  box-sizing: border-box;
   padding: 16px 20px;
   border: none;
   border-radius: 12px;
@@ -479,18 +484,32 @@
 }
 
 @media (max-width: 480px) {
-  .staff-panel {
-    padding: 24px 16px;
-    border-radius: 24px;
+  .staff-shell {
+    padding: 14px 10px 28px;
   }
 
-  .staff-title {
-    font-size: 38px;
+  .staff-portada,
+  .staff-panel {
+    padding: 20px 14px;
+    border-radius: 22px;
   }
 
   .staff-landing {
     min-height: auto;
-    padding: 32px 18px;
+    padding: 28px 16px;
+    border-radius: 24px;
+  }
+
+  .staff-portada-title,
+  .staff-title {
+    font-size: 28px;
+  }
+
+  .staff-copy,
+  .staff-portada-copy,
+  .staff-landing-copy {
+    font-size: 14px;
+    line-height: 1.65;
   }
 
   .staff-logo-landing {
@@ -503,15 +522,91 @@
 
   .staff-stats {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .staff-stepper {
     grid-template-columns: 56px 1fr 56px;
+    gap: 8px;
   }
 
   .staff-stepper-button,
   .staff-stepper-value {
     height: 58px;
+  }
+
+  .staff-name,
+  .staff-stat-value,
+  .staff-success-title {
+    font-size: 26px;
+  }
+
+  .staff-status,
+  .staff-card {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .staff-success-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 34px;
+  }
+
+  .staff-meta p {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .staff-meta strong {
+    text-align: left;
+  }
+
+  .staff-button,
+  .staff-submit {
+    min-height: 54px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 15px;
+  }
+
+}
+
+@media (max-width: 360px) {
+  .staff-shell {
+    padding: 10px 8px 22px;
+  }
+
+  .staff-portada,
+  .staff-panel,
+  .staff-landing {
+    padding: 18px 12px;
+  }
+
+  .staff-title,
+  .staff-portada-title {
+    font-size: 24px;
+  }
+
+  .staff-landing-title {
+    font-size: 32px;
+  }
+
+  .staff-stepper {
+    grid-template-columns: 52px 1fr 52px;
+  }
+
+  .staff-stepper-button,
+  .staff-stepper-value {
+    height: 54px;
+    font-size: 26px;
+  }
+
+  .staff-kicker,
+  .staff-label,
+  .staff-stat-label {
+    letter-spacing: 0.12em;
   }
 }
 
@@ -536,5 +631,16 @@
   line-height: 1.6;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .staff-footer {
+    padding-top: 16px;
+  }
+
+  .staff-footer-copy {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
 }
 
