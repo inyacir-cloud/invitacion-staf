@@ -11,22 +11,27 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body class="staff-body"
-  data-api-endpoint="https://script.google.com/macros/s/AKfycbzbbN3K7N94ZwBTYU6-zdWdUeQv74cJkWy-v6f_lP5M4VqcdDnNXpOLZjH2uhlLrkZ6/exec"
+  data-api-endpoint="https://script.google.com/macros/s/AKfycbxcuR1D2VW33TgDLljHNwPx396eABT_XtGckoGC5lc68rUGj3O8unDauiMo6gSv4OwC/exec"
+  data-event-name="Edith y Pablo"
+  data-event-date="22 Agosto del 2026"
+  data-event-mode="Registro de accesos"
 >
   <main class="staff-shell">
-    <header class="staff-header">
-      <div class="staff-brand">
-        <div class="staff-brand-logo">CX</div>
-        <div class="staff-brand-copy">
-          <p class="staff-brand-name">INYACIRX TECH</p>
-          <p class="staff-brand-role">Control de accesos</p>
-        </div>
-      </div>
-    </header>
+    <section class="staff-landing" id="staffLanding">
+      <img class="staff-logo staff-logo-landing" src="logo.png" alt="Logo del evento">
+      <p class="staff-landing-kicker" id="staffLandingMode">Registro de accesos</p>
+      <h1 class="staff-landing-title" id="staffLandingName">Evento</h1>
+      <p class="staff-landing-date" id="staffLandingDate">Fecha pendiente</p>
+      <p class="staff-landing-copy">Centro operativo para validacion de accesos, lectura de QR y registro de entradas en tiempo real.</p>
+      <button class="staff-button staff-button-primary staff-landing-button" id="botonIniciarGestion" type="button">
+        Iniciar gestion de boletos
+      </button>
+    </section>
 
-    <section class="staff-portada" id="staffPortada">
+    <section class="staff-portada" id="staffPortada" hidden>
+      <img class="staff-logo staff-logo-section" src="logo.png" alt="Logo del evento">
       <h1 class="staff-portada-title">Panel de acceso</h1>
-      <p class="staff-portada-copy">Escanea el QR del pase o ingresa el token para validar el ingreso en vivo.</p>
+      <p class="staff-portada-copy" id="staffPortadaCopy">Escanea el QR del pase o ingresa el token para validar el ingreso en vivo.</p>
 
       <div class="staff-portada-actions">
         <button class="staff-button staff-button-primary" id="botonEscanearQR" type="button">
@@ -58,11 +63,27 @@
     </section>
 
     <section class="staff-panel" id="staffPanel" hidden>
+      <img class="staff-logo staff-logo-section" src="logo.png" alt="Logo del evento">
       <p class="staff-kicker">Control de accesos</p>
       <h1 class="staff-title">Validacion de grupo</h1>
-      <p class="staff-copy">Escanea o abre el QR del grupo. El registro se descuenta en vivo desde la hoja.</p>
+      <p class="staff-copy" id="staffPanelCopy">Escanea o abre el QR del grupo. El registro se descuenta en vivo desde la hoja.</p>
 
       <div class="staff-status" id="staffStatus" aria-live="polite">Cargando acceso...</div>
+
+      <section class="staff-card staff-success-card" id="staffSuccessCard" hidden>
+        <div class="staff-success-icon" aria-hidden="true">✓</div>
+        <p class="staff-label">Acceso registrado</p>
+        <h2 class="staff-success-title" id="staffSuccessTitle">Entrada lista</h2>
+        <p class="staff-success-copy" id="staffSuccessCopy">El acceso se registro correctamente.</p>
+        <div class="staff-success-actions">
+          <button class="staff-button staff-button-primary" id="botonEscanearNuevoQr" type="button">
+            Escanear nuevo QR
+          </button>
+          <button class="staff-button staff-button-secondary" id="botonVolverAlGrupo" type="button">
+            Seguir con este grupo
+          </button>
+        </div>
+      </section>
 
       <section class="staff-card" id="staffResumen" hidden>
         <div class="staff-summary-head">
@@ -113,6 +134,10 @@
         <button class="staff-submit" id="botonRegistrarAcceso" type="button">Registrar entrada</button>
       </section>
     </section>
+
+    <footer class="staff-footer">
+      <p class="staff-footer-copy">Operacion digital de accesos. Validacion segura, trazabilidad en tiempo real y control operativo para staff.</p>
+    </footer>
   </main>
 
   <script src="staff.js"></script>
